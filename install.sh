@@ -18,8 +18,8 @@ After=local-fs.target
 
 [Service]
 RemainAfterExit=yes
-ExecStart=/usr/local/bin/rpi-zram
-ExecStop=/usr/local/bin/rpi-zram stop
+ExecStart=/usr/local/bin/zram.sh
+ExecStop=/usr/local/bin/zram.sh stop
 TimeoutStopSec=600
 Nice=-19
 OOMScoreAdjust=-1000

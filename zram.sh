@@ -25,7 +25,9 @@ swapoff -a
 # enable zram
 modprobe zram num_devices=$cores
 
-echo lz4 > /sys/block/zram0/comp_algorithm
+#echo lz4 > /sys/block/zram0/comp_algorithm
+# lzo is probably a better choiche for low performance CPU (e.g. RPi 1)
+echo lzo > /sys/block/zram0/comp_algorithm
 
 totalmem=$(free | grep -e "^Mem:" | awk '{print $2}')
 #mem=$(( ($totalmem / $cores)* 1024 ))
