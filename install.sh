@@ -1,10 +1,10 @@
 # rpi_zram install
 
 #Download the script and copy to /usr/bin/ folder
-sudo wget -O /usr/bin/zram.sh https://raw.githubusercontent.com/novaspirit/rpi_zram/master/zram.sh
+sudo wget -O /usr/local/bin/zram.sh https://raw.githubusercontent.com/abarrile/rpi_zram/master/zram.sh
 
 #make file executable
-sudo chmod +x /usr/bin/zram.sh
+sudo chmod +x /usr/local/bin/zram.sh
 
 #add line before exit 0
 #sudo vi /etc/rc.local -c 'normal GO/usr/bin/zram.sh &' -c ':wq'
@@ -13,16 +13,21 @@ sudo chmod +x /usr/bin/zram.sh
 
 sudo tee /etc/systemd/system/zram.service <<-'EOF'
 [Unit]
-Description=zram Service
-;After=network-online.target
-;Wants=network-online.target systemd-networkd-wait-online.service
+Description=Script to dynamically enable ZRAM on a Raspberry Pi or other Linux system
+After=local-fs.target
 
 [Service]
-Type=simple
-ExecStart=/usr/bin/zram.sh
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/rpi-zram
+ExecStop=/usr/local/bin/rpi-zram stop
+TimeoutStopSec=600
+Nice=-19
+OOMScoreAdjust=-1000
+CPUAccounting=true
+ProtectHome=read-only
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=local-fs.target
 EOF
 
 sudo systemctl daemon-reload
